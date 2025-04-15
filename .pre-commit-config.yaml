@@ -1,0 +1,6 @@
+repos:
+  - repo: https://github.com/charliermarsh/ruff-pre-commit
+    rev: v0.3.3 # You can update this to the latest Ruff release later
+    hooks:
+      - id: ruff
+        args: [--fix] # Automatically fix issues like formatting and import sorting
