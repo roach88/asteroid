@@ -1,7 +1,7 @@
 import pygame
 
 from circleshape import CircleShape
-from constants import SHOT_RADIUS
+from constants import SHOT_RADIUS, SCREEN_WIDTH, SCREEN_HEIGHT
 
 
 class Shot(CircleShape):
@@ -13,4 +13,7 @@ class Shot(CircleShape):
         pygame.draw.circle(screen, "white", self.position, self.radius, 0)
 
     def update(self, dt):
+        # move and wrap around the screen
         self.position += self.velocity * dt
+        self.position.x %= SCREEN_WIDTH
+        self.position.y %= SCREEN_HEIGHT

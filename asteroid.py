@@ -3,7 +3,7 @@ import random
 import pygame
 
 from circleshape import CircleShape
-from constants import ASTEROID_MIN_RADIUS
+from constants import ASTEROID_MIN_RADIUS, SCREEN_HEIGHT, SCREEN_WIDTH
 
 
 class Asteroid(CircleShape):
@@ -14,7 +14,10 @@ class Asteroid(CircleShape):
         pygame.draw.circle(screen, "white", self.position, self.radius, 2)
 
     def update(self, dt):
+        # move and wrap around the screen
         self.position += self.velocity * dt
+        self.position.x %= SCREEN_WIDTH
+        self.position.y %= SCREEN_HEIGHT
 
     def split(self):
         self.kill()
