@@ -55,6 +55,7 @@ Generation of game elements:
 - AsteroidField handles asteroid spawning with edge selection
 - PerkManager creates randomized perk selections
 - Wave spawning creates the appropriate mix of regular and elite asteroids
+- `create_elite_asteroid()` factory function instantiates the correct elite asteroid type
 
 ### Observer Pattern
 
@@ -68,9 +69,17 @@ Event handling through:
 
 Behavior implementation:
 
-- Elite asteroid types with distinct behaviors (Exploder, Shielded, Swarm Leader)
 - Different movement strategies for asteroids
 - Perk effect implementations
+
+### Inheritance Pattern
+
+Used for specialized game entities:
+
+- Base `Asteroid` class defines common asteroid behavior
+- `EliteAsteroid` extends base Asteroid with enhanced properties
+- Specialized elite types (`ExploderAsteroid`, `ShieldedAsteroid`, `SwarmLeaderAsteroid`) inherit from `EliteAsteroid`
+- Each elite type implements its own behaviors, visual effects, and damage handling
 
 ## Component Relationships
 
@@ -89,7 +98,12 @@ main.py (Game Controller)
 │   │   ├── Shooting Mechanism
 │   │   └── Perk Application
 │   ├── asteroid.py (Base Asteroid)
-│   ├── elite_asteroid.py (Specialized Asteroids)
+│   ├── elite_asteroid.py (Elite Asteroids)
+│   │   ├── EliteAsteroid (Base Class)
+│   │   ├── ExploderAsteroid
+│   │   ├── ShieldedAsteroid
+│   │   ├── SwarmLeaderAsteroid
+│   │   └── create_elite_asteroid() (Factory)
 │   └── shot.py (Projectiles)
 ├── managers/
 │   ├── asteroid_field.py (Spawn Control)
@@ -105,6 +119,8 @@ main.py (Game Controller)
 1. Game loop updates all entities in updateables group
 2. Player input affects ship movement and firing
 3. Collision system detects interactions between shots, asteroids, and player
+   - Now includes calculation of attack angles for directional damage
+   - Handles specialized damage logic for different elite types
 4. Wave completion is detected when asteroids group is empty
 5. When wave completes, interlude UI activates followed by perk selection
 6. Player selects perk, perk manager applies effects
@@ -120,3 +136,25 @@ The game uses pygame sprite groups for efficient entity management:
 - `shots`: All projectiles for collision detection
 
 Each entity type registers with the appropriate containers on instantiation, allowing for clean separation of concerns and efficient group operations.
+
+## Elite Asteroid Design
+
+The elite asteroid system has been refactored to use proper inheritance:
+
+1. **Base EliteAsteroid class**:
+
+   - Extends regular Asteroid
+   - Provides common elite functionality (higher health, credits, pulsing effects)
+
+2. **Specialized Elite Types**:
+
+   - **ExploderAsteroid**: Creates more fragments when destroyed, has chance to "prime" when damaged
+   - **ShieldedAsteroid**: Has directional shield, takes reduced damage from frontal attacks
+   - **SwarmLeaderAsteroid**: Makes unpredictable movement changes, affects nearby asteroids
+
+3. **Factory Function**:
+   - `create_elite_asteroid()` instantiates the appropriate elite type based on a string identifier
+   - Simplifies creation and management of different elite types
+   - Makes adding new elite types straightforward
+
+This structure maximizes code reuse while keeping each elite type's unique behaviors properly encapsulated.

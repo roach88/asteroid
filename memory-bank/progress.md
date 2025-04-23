@@ -20,6 +20,11 @@ The project has moved from the planning phase to active implementation. The core
 - Second milestone features partially implemented:
   - Perk system foundation and manager
   - Perk selection UI
+- Third milestone (Elite Enemies) significantly advanced:
+  - Refactored elite asteroid design using proper inheritance hierarchy
+  - Implemented specialized elite classes with unique behaviors
+  - Added attack angle-based damage system
+  - Enhanced visual and gameplay mechanics for elite asteroids
 
 ## What's Left to Build
 
@@ -43,10 +48,13 @@ Based on the project brief's milestone sequencing:
 
 3. **Design + Implement Elite Enemies**
    - [x] Extend Asteroid class for elite variants
-   - [x] Implement Exploder enemy type
-   - [x] Implement Shielded enemy type
-   - [x] Implement Swarm Leader enemy type
-   - [ ] Fine-tune distinct visuals for elite enemies
+   - [x] Implement class inheritance structure for elite types
+   - [x] Create Exploder elite type with specialized behavior
+   - [x] Create Shielded elite type with directional damage reduction
+   - [x] Create Swarm Leader elite type with unpredictable movement
+   - [x] Implement factory pattern for elite asteroid creation
+   - [x] Add angle-based collision detection for tactical gameplay
+   - [ ] Further enhance distinct visuals for elite enemies
    - [ ] Balance elite enemy spawn rates and behaviors
 
 ## Implementation Priorities
@@ -55,7 +63,7 @@ Current priorities:
 
 1. Complete and refine the Wave Flow & Progression features
 2. Finalize the perk system implementation
-3. Polish elite enemy behaviors and visuals
+3. Further polish elite enemy behaviors and visuals
 
 ## Known Issues
 
@@ -70,7 +78,7 @@ Now that implementation has begun, some challenges have emerged:
 
 1. Complete the remaining Wave Flow features (health regeneration, boss waves)
 2. Finalize perk implementation with full effects
-3. Refine elite enemy visuals and behaviors
+3. Further refine elite enemy visuals and behaviors
 4. Add more polish and balance to existing features
 
 ## Success Metrics Status
@@ -80,4 +88,4 @@ Success metrics defined in the project brief can now start being tracked:
 - Session duration: Initial implementation seems to be on track for the 5-10 minute target
 - Perk selection: Early testing shows perks are being selected, but balance needs refinement
 - Wave progression: Need to gather more data on average wave reached
-- Elite enemy engagement: Elite enemies are implemented but need more distinctive visuals/behaviors
+- Elite enemy engagement: Elite enemies have been significantly enhanced with better visuals and behaviors

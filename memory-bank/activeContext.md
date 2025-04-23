@@ -27,10 +27,15 @@ The immediate focus is on completing the remaining features of the first milesto
   - Created UI for perk selection between waves
   - Added player method to apply perks
 
-- Implemented elite enemy foundation:
-  - Created EliteAsteroid class extending from base Asteroid
-  - Implemented three elite types (Exploder, Shielded, Swarm Leader)
-  - Added logic for elite spawning based on wave number
+- Implemented elite enemy system:
+  - Refactored elite asteroid design to use class inheritance
+  - Created base EliteAsteroid class and specialized child classes:
+    - ExploderAsteroid: Creates more fragments when destroyed
+    - ShieldedAsteroid: Has directional shielding that reduces damage
+    - SwarmLeaderAsteroid: Makes unpredictable movements
+  - Implemented factory pattern to create the appropriate elite asteroid type
+  - Enhanced elite mechanics to make them harder to kill and more threatening
+  - Added attack angle-based damage calculation for shielded asteroids
 
 ## Next Steps
 
@@ -49,7 +54,7 @@ Following the progress already made:
 
 3. Polish elite enemy implementation:
 
-   - Enhance visual distinction for elite enemies
+   - Further enhance visual distinction for elite enemies
    - Fine-tune elite behaviors for better gameplay
    - Balance elite spawn rates across waves
 
@@ -65,25 +70,29 @@ Following the progress already made:
 - The game uses a state-based architecture with distinct states for gameplay, wave transitions, perk selection, and game over
 - Entity management is handled through pygame sprite groups for efficient updates and collision detection
 - Wave management is implemented with scaling difficulty based on wave number
-- Elite enemies extend the base asteroid class with specialized behaviors
+- Elite enemies now use class inheritance for cleaner, more maintainable code
+- Factory pattern is used to instantiate the appropriate elite asteroid type
 
 ### Design Considerations
 
-- Current visuals for elite enemies need enhancement to make them more distinctive
-- Perk effects need to be balanced to ensure they're impactful without being overpowered
-- Wave difficulty scaling appears to work but may need fine-tuning for better player progression
+- Elite enemies have enhanced visual and behavioral distinctions:
+  - Color-based identification for different types
+  - Pulsing effects to highlight elite status
+  - Type-specific visual elements (crosses, shields, orbital rings)
+- Directional attack damage for shielded asteroids creates tactical gameplay
+- Elite enemies are now significantly harder to kill with increased health and damage reduction
 
 ### Technical Considerations
 
-- Collision detection is working but may need optimization as entity count increases
-- Perk implementation currently focuses on passive effects; active perks will require additional input handling
-- Elite enemy behaviors add complexity to asteroid movement patterns
+- Collision detection now includes attack angle calculation for more tactical combat
+- The new inheritance-based structure makes adding new elite types simpler
+- Elite enemy behaviors are now encapsulated in their respective classes
 
 ### Current Questions
 
-- What visual effects would best communicate elite enemy status?
-- How should active perks be triggered and what cooldown mechanisms should be implemented?
-- What additional balancing is needed for wave difficulty progression?
+- What additional elite types might be interesting to implement?
+- How can we further improve visual effects to communicate elite status?
+- Should active perks provide counters to specific elite asteroid types?
 - Should boss waves have unique visuals or behaviors beyond regular elites?
 
 ## Implementation Approach
@@ -92,7 +101,7 @@ The current development approach follows the planned iterative process:
 
 1. Core gameplay loop is now functional with wave management
 2. Perk system foundation is in place but needs completion
-3. Elite enemies are implemented but need visual and behavioral polish
+3. Elite enemies have been refactored with improved inheritance structure
 4. Next focus will be on completing health regeneration and boss waves
 5. Final polish will focus on visual feedback and balancing
 

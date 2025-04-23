@@ -117,6 +117,9 @@ def main():
         for event in events:
             if event.type == pygame.QUIT:
                 running = False
+            # Add mouse click shooting when in playing state
+            elif game_state == STATE_PLAYING and event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
+                player.shoot()
 
         # Get UI updates
         ui_update = ui_manager.update(dt, events)
@@ -130,6 +133,12 @@ def main():
         elif game_state == STATE_PERK_SELECTION and ui_update:
             # Perk was selected, transition to next wave
             game_state = STATE_WAVE_TRANSITION
+
+        # Check for held mouse button for continuous shooting
+        if game_state == STATE_PLAYING:
+            mouse_buttons = pygame.mouse.get_pressed()
+            if mouse_buttons[0]:  # Left mouse button held down
+                player.shoot()
 
         # Clear the screen
         screen.fill("black")

@@ -70,8 +70,8 @@ class ExploderAsteroid(EliteAsteroid):
 
     def draw(self, screen):
         """Draw exploder asteroid with crosses inside"""
-        # Draw base asteroid with pulsing effect
-        intensity = (math.sin(self.time_alive * 5) * 0.3) + 0.7
+        # Draw base asteroid with pulsing effect - higher frequency and wider amplitude
+        intensity = (math.sin(self.time_alive * 8) * 0.5) + 0.7
         pulse_color = tuple(min(255, int(c * intensity)) for c in self.color)
 
         # Draw the asteroid base
@@ -84,12 +84,18 @@ class ExploderAsteroid(EliteAsteroid):
         # Make the cross pulse if primed to explode
         line_width = 3 if self.explosion_primed else 2
 
+        # Additional pulsing effect for the cross size when primed
+        if self.explosion_primed:
+            pulse_size = size * (0.8 + math.sin(self.time_alive * 10) * 0.2)
+        else:
+            pulse_size = size
+
         pygame.draw.line(screen, pulse_color,
-                        (center.x - size, center.y - size),
-                        (center.x + size, center.y + size), line_width)
+                        (center.x - pulse_size, center.y - pulse_size),
+                        (center.x + pulse_size, center.y + pulse_size), line_width)
         pygame.draw.line(screen, pulse_color,
-                        (center.x - size, center.y + size),
-                        (center.x + size, center.y - size), line_width)
+                        (center.x - pulse_size, center.y + pulse_size),
+                        (center.x + pulse_size, center.y - pulse_size), line_width)
 
     def special_behavior(self, dt):
         """Randomly prime for explosion when health is low"""
@@ -140,6 +146,7 @@ class ShieldedAsteroid(EliteAsteroid):
         self.shield_angle = 0
         self.shield_arc_width = 180  # Degrees - wider arc
         self.color = (50, 100, 255)  # Blue
+        self.rotation_speed = 45  # Degrees per second
 
     def draw(self, screen):
         """Draw shielded asteroid with shield arc"""
@@ -168,9 +175,9 @@ class ShieldedAsteroid(EliteAsteroid):
                         math.radians(self.shield_angle + half_width), shield_thickness)
 
     def special_behavior(self, dt):
-        """Make shield drift slightly from velocity direction"""
-        shield_drift = math.sin(self.time_alive) * 15
-        self.shield_angle = pygame.Vector2(0, -1).angle_to(self.velocity) + shield_drift
+        """Rotate shield quickly around the asteroid"""
+        # Faster rotation speed and continuous movement
+        self.shield_angle = (self.shield_angle + self.rotation_speed * dt) % 360
 
     def is_vulnerable_to_attack(self, attack_angle):
         """Check if vulnerable from a specific angle"""
