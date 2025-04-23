@@ -1,0 +1,57 @@
+# Asteroids Roguelike Project Rules
+
+## Project Structure
+
+- Follow the established pygame project structure for code organization
+- Keep assets separate from code in dedicated directories
+- Use clear, descriptive naming for all classes and functions
+
+## Code Style
+
+- Follow PEP 8 style guidelines for Python code
+- Use clear, descriptive variable and function names
+- Implement proper docstrings for all classes and functions
+- Maintain consistent indentation (4 spaces)
+
+## Implementation Patterns
+
+- Use component-based design for game entities
+- Implement state pattern for game flow management
+- Follow factory pattern for creating game objects
+- Utilize observer pattern for event handling
+
+## Project-Specific Patterns
+
+- Always track wave number in the game state
+- Store player perks in a persistent collection during gameplay session
+- Scale enemy difficulty based on wave number
+- Use interlude screens between gameplay waves
+- Implement clear visual distinction for elite enemies
+
+## User Preferences
+
+- Support keyboard controls with potential for customization
+- Provide visual feedback for all player actions
+- Keep UI minimal and clean during gameplay
+- Offer concise, clear information during perk selection
+
+## Known Challenges
+
+- Balance progression difficulty to maintain player engagement
+- Ensure perks feel meaningful without creating overpowered combinations
+- Optimize collision detection for numerous entities
+- Create distinct visual identities for different enemy types
+
+## Workflow
+
+- Focus on implementing and testing one milestone at a time
+- Test gameplay feel regularly during development
+- Track progress against defined success metrics
+- Document design decisions for future reference
+
+## Memory Bank Maintenance
+
+- Update progress.md after completing significant features
+- Keep activeContext.md current with the latest work focus
+- Document any major design decisions in systemPatterns.md
+- Track implementation challenges and solutions
