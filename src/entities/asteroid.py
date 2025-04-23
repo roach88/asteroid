@@ -21,8 +21,17 @@ class Asteroid(CircleShape):
         self.position.x %= SCREEN_WIDTH
         self.position.y %= SCREEN_HEIGHT
 
-    def take_damage(self):
-        """Take damage and return True if destroyed"""
+    def take_damage(self, attack_angle=None):
+        """
+        Take damage and return True if destroyed
+
+        Args:
+            attack_angle: Optional angle of attack in degrees (not used in base asteroid,
+                         but used by elite shielded asteroids)
+
+        Returns:
+            bool: True if the asteroid is destroyed, False otherwise
+        """
         self.health -= 1
         return self.health <= 0
 

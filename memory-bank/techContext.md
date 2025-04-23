@@ -2,7 +2,7 @@
 
 ## Technologies Used
 
-Based on the project brief, the following technologies are likely being used:
+The project is using the following technologies:
 
 ### Core Technologies
 
@@ -11,7 +11,7 @@ Based on the project brief, the following technologies are likely being used:
 
 ### Supporting Technologies
 
-- **Git/GitHub**: Version control and potential publishing platform
+- **Git/GitHub**: Version control system
 - **Pip**: Package management for Python dependencies
 
 ## Development Setup
@@ -24,32 +24,31 @@ Based on the project brief, the following technologies are likely being used:
 
 ### Project Structure
 
-A typical pygame project structure might include:
+The current project structure follows:
 
 ```mermaid
 asteroids/
-├── assets/
-│   ├── images/
-│   ├── sounds/
-│   └── fonts/
-├── src/
+├── assets/ (Game assets)
+├── src/ (Source code)
 │   ├── __init__.py
-│   ├── main.py
-│   ├── game.py
+│   ├── main.py (Game loop and primary controller)
+│   ├── constants.py (Game constants and settings)
 │   ├── entities/
 │   │   ├── __init__.py
-│   │   ├── player.py
-│   │   ├── asteroid.py
-│   │   └── projectile.py
+│   │   ├── player.py (Player ship implementation)
+│   │   ├── asteroid.py (Base asteroid implementation)
+│   │   ├── elite_asteroid.py (Elite asteroid variants)
+│   │   └── shot.py (Projectile implementation)
 │   ├── managers/
 │   │   ├── __init__.py
-│   │   ├── wave_manager.py
-│   │   └── perk_manager.py
-│   └── ui/
-│       ├── __init__.py
-│       ├── hud.py
-│       └── interlude.py
-└── README.md
+│   │   ├── asteroid_field.py (Asteroid spawning)
+│   │   └── perk_manager.py (Perk generation and management)
+│   ├── ui/
+│   │   ├── __init__.py
+│   │   └── ui_manager.py (UI screens and transitions)
+│   └── utils/ (Utility functions)
+├── venv/ (Python virtual environment)
+└── memory-bank/ (Documentation)
 ```
 
 ## Technical Constraints
@@ -57,49 +56,77 @@ asteroids/
 ### Performance Considerations
 
 - **Frame Rate**: Target 60 FPS for smooth gameplay
-- **Entity Count**: Manage the number of active entities to avoid performance issues
-- **Collision Detection**: Optimize collision detection for large numbers of asteroids and projectiles
+- **Entity Count**: Managed through controlled spawning of asteroids
+- **Collision Detection**: Uses Pygame's sprite collision detection, optimized for circle-based entities
 
 ### Cross-Platform Compatibility
 
-- Pygame supports Windows, macOS, and Linux
-- UI scaling should adapt to different screen resolutions
+- Pygame runs on Windows, macOS, and Linux
+- Game constants defined in constants.py for easy configuration
 
 ### Input Handling
 
-- Support for keyboard controls
-- Potentially support for gamepad input
+- Keyboard controls for player movement and actions
+- State-based UI for interacting with perk selection
 
 ## Dependencies
 
 ### Required Libraries
 
 - **Pygame**: Primary game development framework
-  - Handles rendering, input, sound, and game loop
-  - Provides basic collision detection
+  - Handles rendering through Surface and Sprite classes
+  - Provides input handling through pygame.event
+  - Manages collision detection through sprite.spritecollide
+  - Controls game timing through pygame.time.Clock
 
-### Potential Additional Libraries
+### Other Dependencies
 
-- **NumPy**: May be useful for more complex math operations (vector calculations, etc.)
-- **Pickle/JSON**: For saving game stats or configurations
-- **Random**: For randomization of perks, asteroid spawning, etc.
+- **Random**: Used for randomization of asteroid spawning, perk selection, and elite types
+- **Sys**: For system-level operations like exiting the application
 
-## Build and Distribution
+## Implementation Details
 
-### Development Cycle
+### Game Constants
 
-1. Local development and testing
-2. Version control via Git
-3. Potential packaging as standalone executable
+Game parameters are defined in constants.py:
 
-### Distribution Options
+- Screen dimensions (1280x720)
+- Asteroid properties (sizes, types)
+- Player attributes (speed, health)
+- Elite enemy settings (spawn chance, types)
+- Game state constants
 
-- GitHub repository with source code
-- Potentially packaged as executable using tools like PyInstaller or cx_Freeze
-- Web deployment possible using Pygbag (Pygame for WebAssembly)
+### Entity Management
+
+Entities are managed through Pygame's sprite groups:
+
+- updateables: All objects requiring per-frame updates
+- drawables: All objects requiring rendering
+- asteroids: Asteroid entities for collision detection
+- shots: Projectile entities for collision detection
+
+### State Management
+
+Game flow is controlled through state constants:
+
+- STATE_PLAYING: Active gameplay
+- STATE_WAVE_TRANSITION: Between waves
+- STATE_PERK_SELECTION: Perk selection UI
+- STATE_GAME_OVER: Terminal state
 
 ## Technical Debt Considerations
 
-- Ensure proper separation of game logic and rendering for maintainability
-- Plan for extensibility in the perk system to easily add new perks
-- Design the wave system to scale with difficulty in a balanced way
+Current technical debt areas:
+
+- **UI Refinement**: The UI system works but could benefit from more abstraction for complex menus
+- **Perk System Extension**: The foundation exists but needs expansion for more perk types
+- **Performance Optimization**: May need refinement as entity count increases
+- **Active Perk Implementation**: Framework exists but active perk mechanics need expansion
+- **Visual Polish**: Basic rendering works but could benefit from additional visual effects
+
+## Build and Distribution
+
+The game is currently in active development with no packaging for distribution yet. Future distribution options could include:
+
+- GitHub repository with source code
+- Potentially packaged as executable using PyInstaller or cx_Freeze

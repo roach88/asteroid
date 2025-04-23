@@ -2,97 +2,121 @@
 
 ## System Architecture
 
-The Asteroids Roguelike game follows a component-based architecture typical of 2D arcade games, with the following high-level components:
+The Asteroids Roguelike game follows a component-based architecture typical of 2D arcade games. The implementation has materialized with these components:
 
-1. **Game Loop**: Core pygame loop handling rendering, input, and time management
-2. **Entity System**: Objects including player ship, asteroids, bullets, and visual effects
+1. **Game Loop**: Core pygame loop in `main.py` handling rendering, input, and time management
+2. **Entity System**: Objects including Player, Asteroids (regular and elite), and Shots
 3. **Wave Manager**: Controls spawning patterns, wave progression, and difficulty scaling
-4. **Perk System**: Manages available perks, selection UI, and applying effects to gameplay
-5. **UI System**: Handles game state transitions, menus, and info displays
+4. **Perk System**: PerkManager class handling available perks, selection, and application
+5. **UI System**: UIManager handling game state transitions, menus, and information displays
 
 ## Key Technical Decisions
 
 ### Pygame Framework
 
-The project appears to use pygame for rendering and game management, which provides:
+The project uses pygame for rendering and game management:
 
-- Simple 2D rendering capabilities
-- Input handling
-- Basic collision detection
-- Audio support
+- 2D rendering for all game entities
+- Input handling for player controls
+- Sprite-based collision detection
+- State management system for game flow
 
 ### State Management
 
-Game progression will be managed through distinct states:
+Game progression is managed through distinct states implemented as constants:
 
-- Gameplay State (active wave)
-- Interlude State (between waves, selection screen)
-- Game Over State
+- `STATE_PLAYING`: Active gameplay during a wave
+- `STATE_WAVE_TRANSITION`: Between waves, showing countdown
+- `STATE_PERK_SELECTION`: Player choosing perks after a wave
+- `STATE_GAME_OVER`: Terminal state when player loses
 
 ### Entity Enhancement System
 
-A flexible system for perks to modify player or bullet properties dynamically during gameplay.
+Perks modify player or bullet properties through:
+
+- Player.add_perk() method applying perk effects
+- PerkManager generating and tracking available perks
+- Perk effects modifying player attributes or behaviors
 
 ## Design Patterns in Use
 
 ### Component Pattern
 
-Entities will have components that define their behavior:
+Entities have components that define their behavior:
 
-- **Rendering Component**: Visual representation
-- **Physics Component**: Movement, rotation, collision
-- **Behavior Component**: AI patterns for asteroids/enemies
+- **Sprite-based Rendering**: All entities extend pygame.sprite.Sprite
+- **Physics**: Velocity and position management in entity update methods
+- **Behavior**: Specialized behaviors for different entity types
 
 ### Factory Pattern
 
-For generating:
+Generation of game elements:
 
-- Asteroids with varying properties
-- Elite enemies with specialized behaviors
-- Perks with different effects
+- AsteroidField handles asteroid spawning with edge selection
+- PerkManager creates randomized perk selections
+- Wave spawning creates the appropriate mix of regular and elite asteroids
 
 ### Observer Pattern
 
-For event handling:
+Event handling through:
 
-- Wave completion events
-- Player damage/death events
-- Perk activation triggers
+- UI state transitions based on game events
+- Wave completion detection triggering perk selection
+- Collision detection initiating appropriate responses
 
 ### Strategy Pattern
 
-For behavior implementation:
+Behavior implementation:
 
+- Elite asteroid types with distinct behaviors (Exploder, Shielded, Swarm Leader)
 - Different movement strategies for asteroids
-- Various elite enemy behaviors
 - Perk effect implementations
 
 ## Component Relationships
 
+The current implementation structure follows this organization:
+
 ```mermaid
-Game Controller
-├── Wave Manager
-│   ├── Asteroid Spawner
-│   └── Difficulty Scaler
-├── Player Controller
-│   ├── Input Handler
-│   ├── Ship Physics
-│   └── Weapon System
-├── Perk Manager
-│   ├── Perk Factory
-│   └── Effect Applicator
-├── UI Controller
-│   ├── HUD Elements
-│   └── Wave Interlude UI
-└── Collision System
+main.py (Game Controller)
+├── Game State Management
+│   ├── STATE_PLAYING
+│   ├── STATE_WAVE_TRANSITION
+│   ├── STATE_PERK_SELECTION
+│   └── STATE_GAME_OVER
+├── entities/
+│   ├── player.py (Player Controller)
+│   │   ├── Movement & Physics
+│   │   ├── Shooting Mechanism
+│   │   └── Perk Application
+│   ├── asteroid.py (Base Asteroid)
+│   ├── elite_asteroid.py (Specialized Asteroids)
+│   └── shot.py (Projectiles)
+├── managers/
+│   ├── asteroid_field.py (Spawn Control)
+│   └── perk_manager.py (Perk Generation)
+└── ui/
+    └── ui_manager.py (Interface Control)
+        ├── Wave Transition UI
+        └── Perk Selection Interface
 ```
 
 ## Data Flow
 
-1. Game loop updates all entities
+1. Game loop updates all entities in updateables group
 2. Player input affects ship movement and firing
-3. Collision system detects interactions
-4. Wave manager tracks asteroid destruction
-5. When wave completes, interlude UI activates
+3. Collision system detects interactions between shots, asteroids, and player
+4. Wave completion is detected when asteroids group is empty
+5. When wave completes, interlude UI activates followed by perk selection
 6. Player selects perk, perk manager applies effects
-7. New wave begins with adjusted difficulty
+7. New wave begins with adjusted difficulty based on wave number
+
+## Entity Management
+
+The game uses pygame sprite groups for efficient entity management:
+
+- `updateables`: All objects needing per-frame updates
+- `drawables`: All objects requiring rendering
+- `asteroids`: All asteroid entities for collision detection
+- `shots`: All projectiles for collision detection
+
+Each entity type registers with the appropriate containers on instantiation, allowing for clean separation of concerns and efficient group operations.

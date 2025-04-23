@@ -2,15 +2,24 @@
 
 ## Current Status
 
-The project is in the planning/design phase with a feature design document (project brief) created. Implementation has likely not begun or is in very early stages.
+The project has moved from the planning phase to active implementation. The core game structure has been established with significant progress on the first milestone: **Improve Wave Flow & Progression**.
 
 ## What Works
 
 - Initial project planning and feature design document completed
-- Core gameplay concepts defined:
-  - Roguelike progression system
-  - Elite enemy types
-  - Wave progression structure
+- Core pygame project structure implemented:
+  - Main game loop with state management
+  - Entity system (Player, Asteroids, Shots)
+  - Wave management and transitions
+  - UI system for game state transitions
+- First milestone features implemented:
+  - Wave interlude screen with countdown timer
+  - Wave composition scaling (increasing difficulty)
+  - Basic elite enemy structure (with three types defined)
+  - Perk selection UI between waves
+- Second milestone features partially implemented:
+  - Perk system foundation and manager
+  - Perk selection UI
 
 ## What's Left to Build
 
@@ -18,57 +27,57 @@ Based on the project brief's milestone sequencing:
 
 1. **Improve Wave Flow & Progression**
 
-   - [ ] Wave interlude screen implementation
-   - [ ] Wave timer/countdown system
-   - [ ] Wave composition scaling mechanism
+   - [x] Wave interlude screen implementation
+   - [x] Wave timer/countdown system
+   - [x] Wave composition scaling mechanism
    - [ ] Health regeneration systems
    - [ ] Boss wave implementation (for every 5th wave)
 
 2. **Add Upgrade & Perk System**
 
-   - [ ] Create Perk class structure
-   - [ ] Implement perk manager
-   - [ ] Design UI for perk selection
-   - [ ] Implement passive perks (movement speed, HP, piercing bullets)
-   - [ ] Implement active perks (EMP blast, shield recharge, teleport)
+   - [x] Create Perk class structure
+   - [x] Implement perk manager
+   - [x] Design UI for perk selection
+   - [ ] Complete implementation of passive perks (movement speed, HP, piercing bullets)
+   - [ ] Complete implementation of active perks (EMP blast, shield recharge, teleport)
 
 3. **Design + Implement Elite Enemies**
-   - [ ] Extend Asteroid class for elite variants
-   - [ ] Implement Exploder enemy type
-   - [ ] Implement Shielded enemy type
-   - [ ] Implement Swarm Leader enemy type
-   - [ ] Design distinct visuals for elite enemies
-   - [ ] Balance elite enemy spawn rates
+   - [x] Extend Asteroid class for elite variants
+   - [x] Implement Exploder enemy type
+   - [x] Implement Shielded enemy type
+   - [x] Implement Swarm Leader enemy type
+   - [ ] Fine-tune distinct visuals for elite enemies
+   - [ ] Balance elite enemy spawn rates and behaviors
 
 ## Implementation Priorities
 
-The milestone sequencing suggests this priority order:
+Current priorities:
 
-1. First focus on wave progression and flow
-2. Then develop the perk system
-3. Finally add elite enemy variations
+1. Complete and refine the Wave Flow & Progression features
+2. Finalize the perk system implementation
+3. Polish elite enemy behaviors and visuals
 
 ## Known Issues
 
-As the project appears to be in the planning phase, no implementation issues have been encountered yet. Potential challenges to anticipate:
+Now that implementation has begun, some challenges have emerged:
 
-- Balancing difficulty progression across waves
-- Creating visually distinct elite enemies
-- Implementing an intuitive interlude UI for perk selection
-- Ensuring perks feel meaningful and balanced
+- Need to balance the difficulty progression across waves
+- Refining perk effects to ensure they feel impactful without being overpowered
+- Optimizing collision detection for numerous entities
+- Fine-tuning elite enemy behaviors for better gameplay variety
 
 ## Next Steps
 
-1. Begin implementation of the Wave Flow & Progression enhancements
-2. Create basic framework for tracking game state between waves
-3. Implement wave interlude screen with timing controls
-4. Test wave progression mechanics before moving to perk system development
+1. Complete the remaining Wave Flow features (health regeneration, boss waves)
+2. Finalize perk implementation with full effects
+3. Refine elite enemy visuals and behaviors
+4. Add more polish and balance to existing features
 
 ## Success Metrics Status
 
-Success metrics defined in the project brief are not yet being tracked as implementation has not begun. Once implemented, we'll monitor:
+Success metrics defined in the project brief can now start being tracked:
 
-- Session duration (target 5–10 mins average)
-- Perk selection rate
-- Average wave reached before death
-- Elite enemy engagement
+- Session duration: Initial implementation seems to be on track for the 5-10 minute target
+- Perk selection: Early testing shows perks are being selected, but balance needs refinement
+- Wave progression: Need to gather more data on average wave reached
+- Elite enemy engagement: Elite enemies are implemented but need more distinctive visuals/behaviors

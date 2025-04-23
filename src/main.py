@@ -21,7 +21,7 @@ from src.constants import (
     PLAYER_SHOOT_COOLDOWN
 )
 from src.entities.asteroid import Asteroid
-from src.entities.elite_asteroid import EliteAsteroid
+from src.entities.elite_asteroid import create_elite_asteroid, EliteAsteroid, ExploderAsteroid, ShieldedAsteroid, SwarmLeaderAsteroid
 from src.managers.asteroid_field import AsteroidField
 from src.entities.player import Player
 from src.entities.shot import Shot
@@ -36,6 +36,9 @@ shots = pygame.sprite.Group()
 Player.containers = (updateables, drawables)
 Asteroid.containers = (asteroids, updateables, drawables)
 EliteAsteroid.containers = (asteroids, updateables, drawables)
+ExploderAsteroid.containers = (asteroids, updateables, drawables)
+ShieldedAsteroid.containers = (asteroids, updateables, drawables)
+SwarmLeaderAsteroid.containers = (asteroids, updateables, drawables)
 AsteroidField.containers = updateables
 Shot.containers = (shots, updateables, drawables)
 
@@ -84,7 +87,8 @@ def main():
 
             if is_elite:
                 elite_type = random.choice(ELITE_TYPES)
-                asteroid = EliteAsteroid(position.x, position.y,
+                # Use the factory function instead of direct instantiation
+                asteroid = create_elite_asteroid(position.x, position.y,
                                         ASTEROID_MIN_RADIUS * kind,
                                         elite_type)
             else:
@@ -147,9 +151,17 @@ def main():
 
                 # Check shot collisions
                 for shot in shots:
-                    if shot.collision_check(asteroid):
+                    collision, attack_angle = shot.collision_check(asteroid)
+                    if collision:
                         # Check if asteroid takes damage and is destroyed
-                        if asteroid.take_damage():
+                        if isinstance(asteroid, EliteAsteroid):
+                            # Pass attack angle for shielded asteroids
+                            is_destroyed = asteroid.take_damage(attack_angle)
+                        else:
+                            # Regular asteroids don't need attack angle
+                            is_destroyed = asteroid.take_damage()
+
+                        if is_destroyed:
                             # Add credits based on asteroid type
                             credits += asteroid.credits_value
 

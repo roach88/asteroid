@@ -1,4 +1,5 @@
 import pygame
+import math
 
 from src.utils.circleshape import CircleShape
 from src.constants import SHOT_RADIUS, SCREEN_WIDTH, SCREEN_HEIGHT
@@ -37,16 +38,35 @@ class Shot(CircleShape):
         if self.lifetime <= 0:
             self.kill()
 
+    def get_attack_angle(self, target_position):
+        """
+        Calculate the angle at which this shot is hitting the target
+        Returns angle in degrees (0-360)
+        """
+        # Calculate direction vector from target to shot
+        # This is the direction the shot is coming FROM relative to the target
+        direction = self.position - target_position
+
+        # Calculate angle in degrees (0-360) using atan2
+        angle = math.degrees(math.atan2(direction.y, direction.x)) % 360
+
+        return angle
+
     def collision_check(self, circle_object):
         """Check for collision and handle piercing"""
         if (self.position.distance_to(circle_object.position)
             < self.radius + circle_object.radius):
+
+            # Calculate attack angle for the collision
+            attack_angle = self.get_attack_angle(circle_object.position)
+
             if self.pierce > 0:
                 # Reduce pierce count instead of destroying the shot
                 self.pierce -= 1
-                return True
+                return True, attack_angle
             else:
                 # Standard behavior - shot is destroyed on hit
                 self.kill()
-                return True
-        return False
+                return True, attack_angle
+
+        return False, None
