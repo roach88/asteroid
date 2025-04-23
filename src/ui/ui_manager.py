@@ -1,5 +1,5 @@
 import pygame
-import constants
+from src.constants import SCREEN_WIDTH, SCREEN_HEIGHT
 
 class Button:
     def __init__(self, x, y, width, height, text, font, callback=None):
@@ -81,8 +81,8 @@ class UIManager:
         self.perk_cards = []
 
         # Calculate positions for perk cards
-        screen_center_x = constants.SCREEN_WIDTH // 2
-        screen_center_y = constants.SCREEN_HEIGHT // 2
+        screen_center_x = SCREEN_WIDTH // 2
+        screen_center_y = SCREEN_HEIGHT // 2
         card_width = 220
         card_height = 120
         card_spacing = 30
@@ -123,33 +123,33 @@ class UIManager:
     def draw(self):
         if self.wave_transition:
             # Draw semi-transparent overlay
-            overlay = pygame.Surface((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT), pygame.SRCALPHA)
+            overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
             overlay.fill((0, 0, 0, 180))
             self.screen.blit(overlay, (0, 0))
 
             # Draw wave info
             wave_text = f"WAVE {self.wave_num}"
             wave_surf = self.font.render(wave_text, True, (255, 255, 255))
-            text_rect = wave_surf.get_rect(center=(constants.SCREEN_WIDTH // 2, constants.SCREEN_HEIGHT // 2 - 30))
+            text_rect = wave_surf.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 30))
             self.screen.blit(wave_surf, text_rect)
 
             # Draw countdown if > 0
             if self.countdown > 0:
                 count_text = f"Starting in {int(self.countdown) + 1}..."
                 count_surf = self.small_font.render(count_text, True, (255, 255, 255))
-                count_rect = count_surf.get_rect(center=(constants.SCREEN_WIDTH // 2, constants.SCREEN_HEIGHT // 2 + 20))
+                count_rect = count_surf.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 20))
                 self.screen.blit(count_surf, count_rect)
 
         if self.perk_selection:
             # Draw semi-transparent overlay
-            overlay = pygame.Surface((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT), pygame.SRCALPHA)
+            overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
             overlay.fill((0, 0, 0, 180))
             self.screen.blit(overlay, (0, 0))
 
             # Draw title
             title_text = "SELECT AN UPGRADE"
             title_surf = self.font.render(title_text, True, (255, 255, 255))
-            title_rect = title_surf.get_rect(center=(constants.SCREEN_WIDTH // 2, constants.SCREEN_HEIGHT // 2 - 100))
+            title_rect = title_surf.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 100))
             self.screen.blit(title_surf, title_rect)
 
             # Draw perk cards

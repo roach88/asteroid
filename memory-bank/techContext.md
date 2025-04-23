@@ -26,7 +26,7 @@ Based on the project brief, the following technologies are likely being used:
 
 A typical pygame project structure might include:
 
-```
+```mermaid
 asteroids/
 ├── assets/
 │   ├── images/

@@ -3,14 +3,30 @@ import random
 
 import pygame
 
-import constants
-from asteroid import Asteroid
-from elite_asteroid import EliteAsteroid
-from asteroidfield import AsteroidField
-from player import Player
-from shot import Shot
-from perk import PerkManager
-from ui_manager import UIManager
+from src.constants import (
+    SCREEN_WIDTH,
+    SCREEN_HEIGHT,
+    ASTEROID_KINDS,
+    ASTEROID_MIN_RADIUS,
+    ELITE_MIN_WAVE,
+    ELITE_SPAWN_CHANCE,
+    ELITE_TYPES,
+    WAVE_COUNTDOWN,
+    PERK_SELECTION_AFTER_WAVE,
+    STATE_PLAYING,
+    STATE_WAVE_TRANSITION,
+    STATE_PERK_SELECTION,
+    STATE_GAME_OVER,
+    PLAYER_SPEED,
+    PLAYER_SHOOT_COOLDOWN
+)
+from src.entities.asteroid import Asteroid
+from src.entities.elite_asteroid import EliteAsteroid
+from src.managers.asteroid_field import AsteroidField
+from src.entities.player import Player
+from src.entities.shot import Shot
+from src.managers.perk_manager import PerkManager
+from src.ui.ui_manager import UIManager
 
 updateables = pygame.sprite.Group()
 drawables = pygame.sprite.Group()
@@ -26,7 +42,7 @@ Shot.containers = (shots, updateables, drawables)
 
 def main():
     pygame.init()
-    screen = pygame.display.set_mode((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT))
+    screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption("Beaker's Revenge")
     clock = pygame.time.Clock()
     dt = 0
@@ -37,7 +53,7 @@ def main():
     wave = 1
 
     # Game state
-    game_state = constants.STATE_PLAYING
+    game_state = STATE_PLAYING
 
     # UI manager
     ui_manager = UIManager(screen)
@@ -47,11 +63,11 @@ def main():
     perks_available = []
 
     # Create player
-    player = Player(constants.SCREEN_WIDTH / 2, constants.SCREEN_HEIGHT / 2, shots)
+    player = Player(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, shots)
 
     # helper to spawn waves of asteroids
     def spawn_wave(w):
-        spawn_count = w * constants.ASTEROID_KINDS
+        spawn_count = w * ASTEROID_KINDS
 
         for _ in range(spawn_count):
             edge = random.choice(AsteroidField.edges)
@@ -60,25 +76,25 @@ def main():
             velocity = edge[0] * speed
             velocity = velocity.rotate(random.randint(-30, 30))
             position = edge[1](random.uniform(0, 1))
-            kind = random.randint(1, constants.ASTEROID_KINDS)
+            kind = random.randint(1, ASTEROID_KINDS)
 
             # Check if we should spawn an elite asteroid
-            is_elite = (w >= constants.ELITE_MIN_WAVE and
-                        random.random() < constants.ELITE_SPAWN_CHANCE)
+            is_elite = (w >= ELITE_MIN_WAVE and
+                        random.random() < ELITE_SPAWN_CHANCE)
 
             if is_elite:
-                elite_type = random.choice(constants.ELITE_TYPES)
+                elite_type = random.choice(ELITE_TYPES)
                 asteroid = EliteAsteroid(position.x, position.y,
-                                         constants.ASTEROID_MIN_RADIUS * kind,
-                                         elite_type)
+                                        ASTEROID_MIN_RADIUS * kind,
+                                        elite_type)
             else:
-                asteroid = Asteroid(position.x, position.y, constants.ASTEROID_MIN_RADIUS * kind)
+                asteroid = Asteroid(position.x, position.y, ASTEROID_MIN_RADIUS * kind)
 
             asteroid.velocity = velocity
 
     # Start the first wave with interlude
-    ui_manager.show_wave_transition(wave, constants.WAVE_COUNTDOWN)
-    game_state = constants.STATE_WAVE_TRANSITION
+    ui_manager.show_wave_transition(wave, WAVE_COUNTDOWN)
+    game_state = STATE_WAVE_TRANSITION
 
     # Function to handle perk selection
     def select_perk(perk):
@@ -86,8 +102,8 @@ def main():
         print(f"Selected perk: {perk.name}")
 
         # Show wave transition
-        ui_manager.show_wave_transition(wave, constants.WAVE_COUNTDOWN)
-        return constants.STATE_WAVE_TRANSITION
+        ui_manager.show_wave_transition(wave, WAVE_COUNTDOWN)
+        return STATE_WAVE_TRANSITION
 
     # Main game loop
     running = True
@@ -102,20 +118,20 @@ def main():
         ui_update = ui_manager.update(dt, events)
 
         # Process game state
-        if game_state == constants.STATE_WAVE_TRANSITION and ui_update:
+        if game_state == STATE_WAVE_TRANSITION and ui_update:
             # Wave countdown finished, start the wave
             spawn_wave(wave)
-            game_state = constants.STATE_PLAYING
+            game_state = STATE_PLAYING
 
-        elif game_state == constants.STATE_PERK_SELECTION and ui_update:
+        elif game_state == STATE_PERK_SELECTION and ui_update:
             # Perk was selected, transition to next wave
-            game_state = constants.STATE_WAVE_TRANSITION
+            game_state = STATE_WAVE_TRANSITION
 
         # Clear the screen
         screen.fill("black")
 
         # Update game objects if in playing state
-        if game_state == constants.STATE_PLAYING:
+        if game_state == STATE_PLAYING:
             updateables.update(dt)
 
             # Check for collisions
@@ -127,7 +143,7 @@ def main():
                     player.hp -= 1
                     if player.hp <= 0:
                         print("Game over! Final credits:", credits)
-                        game_state = constants.STATE_GAME_OVER
+                        game_state = STATE_GAME_OVER
 
                 # Check shot collisions
                 for shot in shots:
@@ -153,29 +169,29 @@ def main():
             if not asteroids:
                 wave += 1
                 # Go to perk selection if enabled
-                if constants.PERK_SELECTION_AFTER_WAVE:
+                if PERK_SELECTION_AFTER_WAVE:
                     # Get random perks
                     perks_available = perk_manager.get_random_perks(3)
                     # Show perk selection screen
                     ui_manager.show_perk_selection(perks_available, select_perk)
-                    game_state = constants.STATE_PERK_SELECTION
+                    game_state = STATE_PERK_SELECTION
                 else:
                     # Go directly to next wave
-                    ui_manager.show_wave_transition(wave, constants.WAVE_COUNTDOWN)
-                    game_state = constants.STATE_WAVE_TRANSITION
+                    ui_manager.show_wave_transition(wave, WAVE_COUNTDOWN)
+                    game_state = STATE_WAVE_TRANSITION
 
         # Draw game objects
         for drawable in drawables:
             drawable.draw(screen)
 
         # Draw HUD information
-        if game_state == constants.STATE_PLAYING or game_state == constants.STATE_WAVE_TRANSITION:
+        if game_state == STATE_PLAYING or game_state == STATE_WAVE_TRANSITION:
             # Game stats (credits, wave)
             cred_surf = font.render(f"Credits: {credits}", True, pygame.Color('white'))
             screen.blit(cred_surf, (10, 10))
 
             wave_surf = font.render(f"Wave: {wave}", True, pygame.Color('white'))
-            screen.blit(wave_surf, (constants.SCREEN_WIDTH - wave_surf.get_width() - 10, 10))
+            screen.blit(wave_surf, (SCREEN_WIDTH - wave_surf.get_width() - 10, 10))
 
             # Player stats - vertical layout in top left
             y_offset = 50
@@ -188,7 +204,7 @@ def main():
             y_offset += line_height
 
             # Speed display - base value + modifier
-            speed_base = constants.PLAYER_SPEED
+            speed_base = PLAYER_SPEED
             speed_mod = int(speed_base * player.speed_multiplier) - speed_base
             speed_base_text = f"Speed: {speed_base}"
             speed_surf = font.render(speed_base_text, True, pygame.Color('white'))
@@ -202,7 +218,7 @@ def main():
             y_offset += line_height
 
             # Fire rate display - base value + modifier
-            fire_rate_base = 1 / constants.PLAYER_SHOOT_COOLDOWN
+            fire_rate_base = 1 / PLAYER_SHOOT_COOLDOWN
             fire_rate_mod = fire_rate_base * player.fire_rate_multiplier - fire_rate_base
             fire_rate_base_text = f"Fire Rate: {fire_rate_base:.1f}/s"
             fire_rate_surf = font.render(fire_rate_base_text, True, pygame.Color('white'))
@@ -237,24 +253,24 @@ def main():
                     y_offset += 20
 
         # Draw game over screen
-        if game_state == constants.STATE_GAME_OVER:
+        if game_state == STATE_GAME_OVER:
             # Draw semi-transparent overlay
-            overlay = pygame.Surface((constants.SCREEN_WIDTH, constants.SCREEN_HEIGHT), pygame.SRCALPHA)
+            overlay = pygame.Surface((SCREEN_WIDTH, SCREEN_HEIGHT), pygame.SRCALPHA)
             overlay.fill((0, 0, 0, 180))
             screen.blit(overlay, (0, 0))
 
             # Draw game over text
             game_over_font = pygame.font.Font(None, 72)
             game_over_surf = game_over_font.render("GAME OVER", True, pygame.Color('red'))
-            screen.blit(game_over_surf, game_over_surf.get_rect(center=(constants.SCREEN_WIDTH // 2, constants.SCREEN_HEIGHT // 2 - 50)))
+            screen.blit(game_over_surf, game_over_surf.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 - 50)))
 
             # Draw final score
             score_surf = font.render(f"Final Score: {credits}", True, pygame.Color('white'))
-            screen.blit(score_surf, score_surf.get_rect(center=(constants.SCREEN_WIDTH // 2, constants.SCREEN_HEIGHT // 2 + 20)))
+            screen.blit(score_surf, score_surf.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 20)))
 
             # Draw restart prompt
             restart_surf = font.render("Press R to restart or Q to quit", True, pygame.Color('white'))
-            screen.blit(restart_surf, restart_surf.get_rect(center=(constants.SCREEN_WIDTH // 2, constants.SCREEN_HEIGHT // 2 + 70)))
+            screen.blit(restart_surf, restart_surf.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2 + 70)))
 
             # Check for restart or quit
             keys = pygame.key.get_pressed()

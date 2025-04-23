@@ -2,8 +2,8 @@ import random
 import pygame
 import math
 
-from asteroid import Asteroid
-from constants import ASTEROID_MIN_RADIUS
+from src.entities.asteroid import Asteroid
+from src.constants import ASTEROID_MIN_RADIUS
 
 class EliteAsteroid(Asteroid):
     def __init__(self, x, y, radius, elite_type):

@@ -69,7 +69,7 @@ For behavior implementation:
 
 ## Component Relationships
 
-```
+```mermaid
 Game Controller
 ├── Wave Manager
 │   ├── Asteroid Spawner
