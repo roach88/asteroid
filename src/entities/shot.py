@@ -47,5 +47,6 @@ class Shot(CircleShape):
                 return True
             else:
                 # Standard behavior - shot is destroyed on hit
+                self.kill()
                 return True
         return False
